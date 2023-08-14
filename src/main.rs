@@ -52,12 +52,39 @@ impl Account {
             _ => Err(WithdrawError::InvalidNumber),
         }
     }
+
+    pub fn transfer_funds_to(
+        &mut self,
+        receiver: &mut Account,
+        amount: f64,
+    ) -> Result<(), TransferError> {
+        if let Err(e) = self.withdraw(amount) {
+            return Err(TransferError::Withdraw(e));
+        }
+        if let Err(e) = receiver.deposit(amount) {
+            return Err(TransferError::Deposit(e));
+        }
+        Ok(())
+    }
 }
 
 fn main() {
-    let account1 = Account::new(1000.0);
-    let account2 = Account::new(500.0);
+    let mut account1 = Account::new(1000.0);
+    let mut account2 = Account::new(500.0);
 
     println!("Account 1 Balance: {}", account1.get_balance());
     println!("Account 2 Balance: {}", account2.get_balance());
+
+    if let Err(err) = account1.transfer_funds_to(&mut account2, 3.50) {
+        println!("Error: {:?}", err)
+    }
+
+    println!(
+        "Account 1 Balance after transfer: {}",
+        account1.get_balance()
+    );
+    println!(
+        "Account 2 Balance after transfer: {}",
+        account2.get_balance()
+    );
 }
