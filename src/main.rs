@@ -26,8 +26,8 @@ impl Account {
         Account { balance }
     }
 
-    pub fn get_balance(&self) -> f64 {
-        self.balance
+    pub fn get_balance(&self) -> String {
+        format!("{:.2}", self.balance)
     }
 
     fn deposit(&mut self, amount: f64) -> Result<(), DepositError> {
@@ -75,7 +75,7 @@ fn main() {
     println!("Account 1 Balance: {}", account1.get_balance());
     println!("Account 2 Balance: {}", account2.get_balance());
 
-    if let Err(err) = account1.transfer_funds_to(&mut account2, 3.50) {
+    if let Err(err) = account1.transfer_funds_to(&mut account2, 3.00) {
         println!("Error: {:?}", err)
     }
 
